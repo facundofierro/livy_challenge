@@ -1,3 +1,13 @@
+/**
+ * 
+ * Sample application for livy challege 2020
+ * 
+ * Creation date: 18/08/2020
+ * 
+ * Author: Facundo Fierro
+ * 
+ */
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');

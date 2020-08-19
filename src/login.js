@@ -1,6 +1,9 @@
 
 var login = () => {};
 
+/**
+ * Makes user authentication. Currently using harcoded users for sample application. 
+ */
 login.authenticate = (user, password, users) => {    
     return new Promise(async (resolve, reject) => {
         try {
