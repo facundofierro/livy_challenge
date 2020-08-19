@@ -19,7 +19,7 @@ Post content for sample user with users role:
 Response sample:
 {
     "mensaje": "Authentication successful",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVjayI6dHJ1ZSwidXNlciI6eyJuYW1lIjoiRmFjdW5kbyIsImVtYWlsIjoiIiwicGFzc3dvcmQiOiJjbGF2ZTEiLCJyb2xlIjoiYWRtaW4ifSwiaWF0IjoxNTk3ODc4MTg1LCJleHAiOjE1OTc4Nzk2MjV9.whBuLxAikNdikNQTeb3TdIu8uRux3aIiT7MDREPL7h0"
+    "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 }
 
 3) Make get calls adding access-token header with token retrived by login request.
