@@ -15,8 +15,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
-const login = require('./login');
-const conf = require('./conf');
+const login = require('./src/login');
+const conf = require('./src/conf');
 
 //example data
 const clients = JSON.parse(fs.readFileSync('./data/clients.json', 'utf8')).clients;
@@ -88,6 +88,7 @@ protectedRoutes.use((req, res, next) => {
 
 // get clients by id
 app.get('/ClientsById/:id', protectedRoutes, (req, res) => {
+    let userRole = req.decoded.user.role; 
     if (userRole !== 'admin' && userRole !== 'users') {
         res.send(`Role ${userRole} has no access to this api.`);
     }
@@ -111,6 +112,7 @@ app.get('/ClientsByName/:name', protectedRoutes, (req, res) => {
 
 // get policies by user name 
 app.get('/PoliciesByUserName/:name', protectedRoutes, (req, res) => {
+    let userRole = req.decoded.user.role; 
     if (userRole !== 'admin') {
         res.send(`Role ${userRole} has no access to this api.`);
     }
@@ -126,6 +128,7 @@ app.get('/PoliciesByUserName/:name', protectedRoutes, (req, res) => {
 
 // get user by policy number
 app.get('/ClientByPolicyId/:id', protectedRoutes, (req, res) => {
+    let userRole = req.decoded.user.role; 
     if (userRole !== 'admin') {
         res.send(`Role ${userRole} has no access to this api.`);
     }
