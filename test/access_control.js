@@ -1,3 +1,10 @@
+/*
+ *
+ * Makes some basic tests using Mocha and Chai
+ * 
+ * Test that test user with role "users" can not acces forbiden api.
+ * 
+ */
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -12,7 +19,7 @@ describe('Login: ', () => {
     it('should retrieve token', (done) => {
         chai.request(url)
         .post('/login')
-        .send({user: "Facundo", password: "clave1"})
+        .send({user: "Matias", password: "clave2"}) //sample user with role "users"
         .end( function(err,res){
             console.log(res.body)            
             expect(res).to.have.status(200);
@@ -33,7 +40,7 @@ describe('Get sample clients by id: ', ()=>{
         .set('access-token', token)
         .end( function(err,res) {
             console.log(res.body)
-            expect(res).to.have.status(200);
+            expect(res).to.have.status(200); //expects to have access
             done();
         });
     });
@@ -48,7 +55,7 @@ describe('Get sample clients by name: ', ()=>{
         .set('access-token', token)
         .end( function(err,res) {
             console.log(res.body)
-            expect(res).to.have.status(200);
+            expect(res).to.have.status(200);  //expects to have access
             done();
         });
     });
@@ -61,7 +68,7 @@ describe('Get policies by user name: ', ()=>{
         .set('access-token', token)
         .end( function(err,res) {
             console.log(res.body)
-            expect(res).to.have.status(200);
+            expect(res).to.have.status(400); //no access expected
             done();
         });
     });
@@ -74,7 +81,7 @@ describe('Get policies by id: ', ()=>{
         .set('access-token', token)
         .end( function(err,res) {
             console.log(res.body)
-            expect(res).to.have.status(200);
+            expect(res).to.have.status(400); //no access expected
             done();
         });
     });

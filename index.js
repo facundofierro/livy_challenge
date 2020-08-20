@@ -90,7 +90,7 @@ protectedRoutes.use((req, res, next) => {
 app.get('/ClientsById/:id', protectedRoutes, (req, res) => {
     let userRole = req.decoded.user.role; 
     if (userRole !== 'admin' && userRole !== 'users') {
-        res.send(`Role ${userRole} has no access to this api.`);
+        res.status(400).send(`Role ${userRole} has no access to this api.`);
     }
     else {
         let filteredClients = clients.filter(c => c.id === req.params.id);
@@ -102,7 +102,7 @@ app.get('/ClientsById/:id', protectedRoutes, (req, res) => {
 app.get('/ClientsByName/:name', protectedRoutes, (req, res) => {
     let userRole = req.decoded.user.role; 
     if (userRole !== 'admin' && userRole !== 'users') {
-        res.send(`Role ${userRole} has no access to this api.`);
+        res.status(400).send(`Role ${userRole} has no access to this api.`);
     }
     else {
         let filteredClients = clients.filter(c => c.name === req.params.name);
@@ -114,7 +114,7 @@ app.get('/ClientsByName/:name', protectedRoutes, (req, res) => {
 app.get('/PoliciesByUserName/:name', protectedRoutes, (req, res) => {
     let userRole = req.decoded.user.role; 
     if (userRole !== 'admin') {
-        res.send(`Role ${userRole} has no access to this api.`);
+        res.status(400).send(`Role ${userRole} has no access to this api.`);
     }
     else {
         let filteredClients = clients.filter(c => c.name === req.params.name);
@@ -131,7 +131,7 @@ app.get('/PoliciesByUserName/:name', protectedRoutes, (req, res) => {
 app.get('/ClientByPolicyId/:id', protectedRoutes, (req, res) => {
     let userRole = req.decoded.user.role; 
     if (userRole !== 'admin') {
-        res.send(`Role ${userRole} has no access to this api.`);
+        res.status(400).send(`Role ${userRole} has no access to this api.`);
     }
     else {
         let filteredPolicies = policies.filter(p => p.id === req.params.id);
