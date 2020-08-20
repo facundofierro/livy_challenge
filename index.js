@@ -46,7 +46,9 @@ app.listen(4000, () => {
 
     console.log('Listening on port 4000');
 
-    let helpText = `1) Login with test users using post method: http://localhost:4000/login
+    let helpText = `1) Run "npm test" to check that all functions are working.
+
+2) Login with test users using post method: http://localhost:4000/login
 
 Post content for sample admin user: {"user":"Facundo", "password":"clave1"}
 
@@ -54,7 +56,7 @@ Post content for sample user with users role: {"user":"Matias", "password":"clav
 
 Response sample: { "mensaje": "Authentication successful", "token": "xxxxxxxxxxxxxx" }
 
-2) Make get calls adding access-token header with token retrived by login request.
+3) Make get calls adding access-token header with token retrived by login request.
 
 Sample call for getting clients by id: http://localhost:4000/ClientsById/e8fd159b-57c4-4d36-9bd7-a59ca13057bb
 
