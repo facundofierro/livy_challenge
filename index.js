@@ -118,11 +118,12 @@ app.get('/PoliciesByUserName/:name', protectedRoutes, (req, res) => {
     }
     else {
         let filteredClients = clients.filter(c => c.name === req.params.name);
-        for (let client of filteredClients) {
+        const resultClients = filteredClients.map(a => Object.assign({}, a));
+        for (let client of resultClients) {
             let filteredPolicies = policies.filter(p => p.clientId === client.id);
             client.policies = filteredPolicies;
         }
-        res.send(filteredClients);
+        res.send(resultClients);
     }
 });
 
@@ -134,11 +135,12 @@ app.get('/ClientByPolicyId/:id', protectedRoutes, (req, res) => {
     }
     else {
         let filteredPolicies = policies.filter(p => p.id === req.params.id);
-        for (let policy of filteredPolicies) {
+        const resultPolicies = filteredPolicies.map(a => Object.assign({}, a));
+        for (let policy of resultPolicies) {
             let filteredClients = clients.filter(c => c.id === policy.clientId);
             policy.clients = filteredClients;
         }
-        res.send(filteredPolicies);
+        res.send(resultPolicies);
     }
 });
 
@@ -167,12 +169,3 @@ Sample call for getting clients by policy id: http://localhost:4000/ClientByPoli
 
     console.log(helpText);
 });
-
-
-
-
-
-
-
-
-
