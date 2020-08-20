@@ -14,14 +14,12 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const fs = require('fs');
-const jwt = require('jsonwebtoken');
-const login = require('./src/login');
-const conf = require('./src/conf');
+const routes = require('./src/routes');
 
-//example data
-const clients = JSON.parse(fs.readFileSync('./data/clients.json', 'utf8')).clients;
-const policies = JSON.parse(fs.readFileSync('./data/policies.json', 'utf8')).policies;
-const users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8')).users;
+//sample data
+global.clients = JSON.parse(fs.readFileSync('./data/clients.json', 'utf8')).clients;
+global.policies = JSON.parse(fs.readFileSync('./data/policies.json', 'utf8')).policies;
+global.users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8')).users;
 
 //express app
 const app = express();
@@ -39,127 +37,9 @@ app.use(cors());
 // log HTTP requests
 app.use(morgan('combined'));
 
-//set master key
-console.log(conf.masterkey);
-app.set('masterkey', conf.masterkey);
 
-//protect routes
-const protectedRoutes = express.Router(); 
-protectedRoutes.use((req, res, next) => {
-    const token = req.headers['access-token']; 
-    if (token) {
-        jwt.verify(token, app.get('masterkey'), (err, decoded) => {      
-            if (err) {
-                return res.json({ mensaje: 'Invalid token' });    
-            } else {
-                req.decoded = decoded;   
-                next();
-            }
-        });
-    } 
-    else {
-        res.status(400).json({ mensaje: "Token required"});
-    }
- });
-
- // login 
- app.post('/login', async (req, res) => {
-    try {
-        let currentUser = await login.authenticate(req.body.user, req.body.password, users);        
-        const payload = {
-            check:  true,
-            user: currentUser 
-        };
-        const token = jwt.sign(payload, app.get('masterkey'), {
-            expiresIn: 1440
-        });
-        res.json({
-            mensaje: 'Authentication successful',
-            token: token
-        });
-    } catch (e) {
-        console.log(e.message);
-        res.status(400).json(e);
-    }
-})
-
-// get clients by id
-app.get('/ClientsById/:id', protectedRoutes, (req, res) => {
-    try {
-        let userRole = req.decoded.user.role; 
-        if (userRole !== 'admin' && userRole !== 'users') {
-            res.status(400).send(`Role ${userRole} has no access to this api.`);
-        }
-        else {
-            let filteredClients = clients.filter(c => c.id === req.params.id);
-            res.send(filteredClients);
-        }
-    } catch (e) {
-        console.log(e.message);
-        res.status(400).json(e);
-    }
-});
-
-// get clients by name
-app.get('/ClientsByName/:name', protectedRoutes, (req, res) => {
-    try {
-        let userRole = req.decoded.user.role; 
-        if (userRole !== 'admin' && userRole !== 'users') {
-            res.status(400).send(`Role ${userRole} has no access to this api.`);
-        }
-        else {
-            let filteredClients = clients.filter(c => c.name === req.params.name);
-            res.send(filteredClients);
-        }
-    } catch (e) {
-        console.log(e.message);
-        res.status(400).json(e);
-    }
-});
-
-// get policies by user name 
-app.get('/PoliciesByUserName/:name', protectedRoutes, (req, res) => {
-    try {
-        let userRole = req.decoded.user.role; 
-        if (userRole !== 'admin') {
-            res.status(400).send(`Role ${userRole} has no access to this api.`);
-        }
-        else {
-            let filteredClients = clients.filter(c => c.name === req.params.name);
-            const resultClients = filteredClients.map(a => Object.assign({}, a));
-            for (let client of resultClients) {
-                let filteredPolicies = policies.filter(p => p.clientId === client.id);
-                client.policies = filteredPolicies;
-            }
-            res.send(resultClients);
-        }
-    } catch (e) {
-        console.log(e.message);
-        res.status(400).json({ mensaje: e.message});
-    }
-});
-
-// get user by policy number
-app.get('/ClientByPolicyId/:id', protectedRoutes, (req, res) => {
-    try {
-        let userRole = req.decoded.user.role; 
-        if (userRole !== 'admin') {
-            res.status(400).send(`Role ${userRole} has no access to this api.`);
-        }
-        else {
-            let filteredPolicies = policies.filter(p => p.id === req.params.id);
-            const resultPolicies = filteredPolicies.map(a => Object.assign({}, a));
-            for (let policy of resultPolicies) {
-                let filteredClients = clients.filter(c => c.id === policy.clientId);
-                policy.clients = filteredClients;
-            }
-            res.send(resultPolicies);
-        }
-    } catch (e) {
-        console.log(e.message);
-        res.status(400).json({ mensaje: e.message});
-    }
-});
+//process all routes
+app.use('/', routes);
 
 // starting the server
 app.listen(4000, () => {
