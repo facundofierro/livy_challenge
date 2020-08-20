@@ -88,7 +88,7 @@ describe('Get policies by user name: ', ()=>{
     });
 });
 
-describe('Get policies by id: ', ()=>{
+describe('Get clients by policy id: ', ()=>{
     it('should get policies by id', (done) => {
         chai.request(url)
         .get('/ClientByPolicyId/56b415d6-53ee-4481-994f-4bffa47b5239')
