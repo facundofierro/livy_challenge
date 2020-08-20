@@ -46,8 +46,7 @@ app.set('masterkey', conf.masterkey);
 //protect routes
 const protectedRoutes = express.Router(); 
 protectedRoutes.use((req, res, next) => {
-    const token = req.headers['access-token'];
- 
+    const token = req.headers['access-token']; 
     if (token) {
         jwt.verify(token, app.get('masterkey'), (err, decoded) => {      
             if (err) {
@@ -59,9 +58,7 @@ protectedRoutes.use((req, res, next) => {
         });
     } 
     else {
-        res.send({ 
-          mensaje: 'Token required' 
-        });
+        res.status(400).json({ mensaje: "Token required"});
     }
  });
 
@@ -82,65 +79,85 @@ protectedRoutes.use((req, res, next) => {
         });
     } catch (e) {
         console.log(e.message);
-        res.json({ mensaje: "User or password incorrect"})
+        res.status(400).json(e);
     }
 })
 
 // get clients by id
 app.get('/ClientsById/:id', protectedRoutes, (req, res) => {
-    let userRole = req.decoded.user.role; 
-    if (userRole !== 'admin' && userRole !== 'users') {
-        res.status(400).send(`Role ${userRole} has no access to this api.`);
-    }
-    else {
-        let filteredClients = clients.filter(c => c.id === req.params.id);
-        res.send(filteredClients);
+    try {
+        let userRole = req.decoded.user.role; 
+        if (userRole !== 'admin' && userRole !== 'users') {
+            res.status(400).send(`Role ${userRole} has no access to this api.`);
+        }
+        else {
+            let filteredClients = clients.filter(c => c.id === req.params.id);
+            res.send(filteredClients);
+        }
+    } catch (e) {
+        console.log(e.message);
+        res.status(400).json(e);
     }
 });
 
 // get clients by name
 app.get('/ClientsByName/:name', protectedRoutes, (req, res) => {
-    let userRole = req.decoded.user.role; 
-    if (userRole !== 'admin' && userRole !== 'users') {
-        res.status(400).send(`Role ${userRole} has no access to this api.`);
-    }
-    else {
-        let filteredClients = clients.filter(c => c.name === req.params.name);
-        res.send(filteredClients);
+    try {
+        let userRole = req.decoded.user.role; 
+        if (userRole !== 'admin' && userRole !== 'users') {
+            res.status(400).send(`Role ${userRole} has no access to this api.`);
+        }
+        else {
+            let filteredClients = clients.filter(c => c.name === req.params.name);
+            res.send(filteredClients);
+        }
+    } catch (e) {
+        console.log(e.message);
+        res.status(400).json(e);
     }
 });
 
 // get policies by user name 
 app.get('/PoliciesByUserName/:name', protectedRoutes, (req, res) => {
-    let userRole = req.decoded.user.role; 
-    if (userRole !== 'admin') {
-        res.status(400).send(`Role ${userRole} has no access to this api.`);
-    }
-    else {
-        let filteredClients = clients.filter(c => c.name === req.params.name);
-        const resultClients = filteredClients.map(a => Object.assign({}, a));
-        for (let client of resultClients) {
-            let filteredPolicies = policies.filter(p => p.clientId === client.id);
-            client.policies = filteredPolicies;
+    try {
+        let userRole = req.decoded.user.role; 
+        if (userRole !== 'admin') {
+            res.status(400).send(`Role ${userRole} has no access to this api.`);
         }
-        res.send(resultClients);
+        else {
+            let filteredClients = clients.filter(c => c.name === req.params.name);
+            const resultClients = filteredClients.map(a => Object.assign({}, a));
+            for (let client of resultClients) {
+                let filteredPolicies = policies.filter(p => p.clientId === client.id);
+                client.policies = filteredPolicies;
+            }
+            res.send(resultClients);
+        }
+    } catch (e) {
+        console.log(e.message);
+        res.status(400).json({ mensaje: e.message});
     }
 });
 
 // get user by policy number
 app.get('/ClientByPolicyId/:id', protectedRoutes, (req, res) => {
-    let userRole = req.decoded.user.role; 
-    if (userRole !== 'admin') {
-        res.status(400).send(`Role ${userRole} has no access to this api.`);
-    }
-    else {
-        let filteredPolicies = policies.filter(p => p.id === req.params.id);
-        const resultPolicies = filteredPolicies.map(a => Object.assign({}, a));
-        for (let policy of resultPolicies) {
-            let filteredClients = clients.filter(c => c.id === policy.clientId);
-            policy.clients = filteredClients;
+    try {
+        let userRole = req.decoded.user.role; 
+        if (userRole !== 'admin') {
+            res.status(400).send(`Role ${userRole} has no access to this api.`);
         }
-        res.send(resultPolicies);
+        else {
+            let filteredPolicies = policies.filter(p => p.id === req.params.id);
+            const resultPolicies = filteredPolicies.map(a => Object.assign({}, a));
+            for (let policy of resultPolicies) {
+                let filteredClients = clients.filter(c => c.id === policy.clientId);
+                policy.clients = filteredClients;
+            }
+            res.send(resultPolicies);
+        }
+    } catch (e) {
+        console.log(e.message);
+        res.status(400).json({ mensaje: e.message});
     }
 });
 

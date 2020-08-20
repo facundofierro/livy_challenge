@@ -15,6 +15,21 @@ const url= 'http://localhost:4000';
 
 var token;
 
+
+describe('Login: ', () => {
+    it('should fail', (done) => {
+        chai.request(url)
+        .post('/login')
+        .send({user: "WrongUser", password: "WrongPassword"}) 
+        .end( function(err,res){
+            console.log(res.body)            
+            expect(res).to.have.status(400);
+            done();
+        });
+    });
+});
+
+
 describe('Login: ', () => {
     it('should retrieve token', (done) => {
         chai.request(url)
@@ -29,8 +44,7 @@ describe('Login: ', () => {
             done();
         });
     });
-});
-   
+});   
    
 
 describe('Get sample clients by id: ', ()=>{
