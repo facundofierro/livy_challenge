@@ -12,6 +12,8 @@ const router = express.Router();
 
 //protected routes
 const protectedRoutes = express.Router(); 
+
+//access-token control
 protectedRoutes.use((req, res, next) => {
     const token = req.headers['access-token']; 
     if (token) {
