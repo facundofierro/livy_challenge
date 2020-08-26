@@ -3,11 +3,11 @@
 ## Usage:
 
 ### 1) Start api application
-```bash
+``bash
 npm start
 
 ### 2) Test api application
-```bash
+``bash
 npm test
 
 ### 3) Login with test users using post method:
