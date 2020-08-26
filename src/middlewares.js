@@ -1,31 +1,30 @@
-const jwt = require("jsonwebtoken");
-const conf = require("../conf");
+import { verify } from 'jsonwebtoken';
+import { masterkey } from '../conf';
 
 const middlewares = {
   tokenVerify: (req, res, next) => {
-    const token = req.headers["access-token"];
+    const token = req.headers['access-token'];
     if (token) {
-      jwt.verify(token, conf.masterkey, (err, decoded) => {
+      verify(token, masterkey, (err, decoded) => {
         if (err) {
-          return res.json({ mensaje: "Invalid token" });
-        } else {
-          req.decoded = decoded;
-          next();
+          return res.json({ mensaje: 'Invalid token' });
         }
+        req.decoded = decoded;
+        next();
       });
     } else {
-      res.status(400).json({ mensaje: "Token required" });
+      res.status(400).json({ mensaje: 'Token required' });
     }
   },
 
   isAdmin: (req, res, next) => {
     try {
-      if (req.decoded.user[0].role === "admin") {
+      if (req.decoded.user[0].role === 'admin') {
         next();
       } else {
         res
           .status(400)
-          .json({ mensaje: "Access denied - Admin role required" });
+          .json({ mensaje: 'Access denied - Admin role required' });
       }
     } catch (e) {
       res.status(400).json(e);
@@ -33,4 +32,4 @@ const middlewares = {
   },
 };
 
-module.exports = middlewares;
+export default middlewares;

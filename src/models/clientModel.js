@@ -1,13 +1,13 @@
-const mongoose = require("mongoose");
+import { Schema, model } from 'mongoose';
 
 /**
  * Client model schema.
  */
-const clientSchema = new mongoose.Schema({
+const clientSchema = new Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
   email: { type: String },
   role: { type: String },
 });
 
-module.exports = mongoose.model("client", clientSchema);
+module.exports = model('client', clientSchema);

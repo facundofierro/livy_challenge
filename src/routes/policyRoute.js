@@ -1,28 +1,24 @@
+/* eslint-disable no-console */
 /*
-* Process all routes
-*
-*/
+ * Process all routes
+ *
+ */
 
-const express = require('express');
-const policyController = require('../controllers/policyController.js');
+import { Router } from 'express';
+import { getPoliciesByUserName } from '../controllers/policyController';
+import { tokenVerify, isAdmin } from '../middlewares';
 
-//middlewares
-const tokenVerify = require('../middlewares.js').tokenVerify;
-const isAdmin = require('../middlewares.js').isAdmin;
+const router = Router();
 
-const router = express.Router();
-
-
-// get policies by user name 
+// get policies by user name
 router.get('/client_name/:name', tokenVerify, isAdmin, async (req, res) => {
-    try {
-        let result = await policyController.getPoliciesByUserName(req.params.name);
-        res.send(result);
-    } catch (e) {
-        console.log(e.message);
-        res.status(400).json({ mensaje: e.message});
-    }
+  try {
+    const result = getPoliciesByUserName(req.params.name);
+    res.send(result);
+  } catch (e) {
+    console.log(e.message);
+    res.status(400).json({ mensaje: e.message });
+  }
 });
 
-
-module.exports = router;
+export default router;

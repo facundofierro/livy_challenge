@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  *
  * Sample application for livy challege 2020
@@ -8,47 +9,47 @@
  *
  */
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
+import express from 'express';
+import { json, urlencoded } from 'body-parser';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
-const clientRoute = require("./src/routes/clientRoute");
-const policyRoute = require("./src/routes/policyRoute");
-const loginRoute = require("./src/routes/loginRoute");
+import clientRoute from './src/routes/clientRoute';
+import policyRoute from './src/routes/policyRoute';
+import loginRoute from './src/routes/loginRoute';
 
-const database = require("./src/database");
+import { start } from './src/database';
 
-//start mongo in memory service
-database.start();
+// start mongo in memory service
+start();
 
-//express app
+// express app
 const app = express();
 
 // enhance security
 app.use(helmet());
 
 // using bodyParser to parse JSON bodies into JS objects
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 // enabling CORS
 app.use(cors());
 
 // log HTTP requests
-app.use(morgan("combined"));
+app.use(morgan('combined'));
 
-//process routes
-app.use("/login", loginRoute);
-app.use("/client", clientRoute);
-app.use("/policy", policyRoute);
+// process routes
+app.use('/login', loginRoute);
+app.use('/client', clientRoute);
+app.use('/policy', policyRoute);
 
 // starting the server
 app.listen(4000, () => {
-  console.log("Listening on port 4000");
+  console.log('Listening on port 4000');
 
-  let helpText = `1) Run "npm test" to check that all functions are working.
+  const helpText = `1) Run "npm test" to check that all functions are working.
 
 2) Login with test users using post method: http://localhost:4000/login
 

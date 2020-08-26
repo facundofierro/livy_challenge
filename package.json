@@ -2,6 +2,7 @@
   "name": "challenge_livy",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive --exit",

@@ -1,37 +1,35 @@
-const jwt = require("jsonwebtoken");
-var database = require("../database.js");
-const conf = require("../../conf");
+/* eslint-disable no-console */
+import { sign } from 'jsonwebtoken';
+import database from '../database';
+import { masterkey } from '../../conf';
 
-var loginController = () => {};
-
-/**
- * Makes user authentication. Currently using harcoded users for sample application.
- */
-loginController.authenticate = (user, password) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let currentUser = await database.User.find({
-        name: user,
-        password: password,
+const loginController = {
+  /**
+   * Makes user authentication. Currently using harcoded users for sample application.
+   */
+  authenticate: async (user, password) => {
+    let result;
+    const currentUser = await database.User.find({
+      name: user,
+      password,
+    });
+    if (currentUser.length > 0) {
+      const payload = {
+        check: true,
+        user: currentUser,
+      };
+      const token = sign(payload, masterkey, {
+        expiresIn: 1440,
       });
-      if (currentUser.length > 0) {
-        const payload = {
-          check: true,
-          user: currentUser,
-        };
-        const token = jwt.sign(payload, conf.masterkey, {
-          expiresIn: 1440,
-        });
-        resolve({
-          mensaje: "Authentication successful",
-          token: token,
-        });
-      } else reject({ message: "User not found" });
-    } catch (e) {
-      console.log(e.message);
-      reject(e);
+      result = {
+        mensaje: 'Authentication successful',
+        token,
+      };
+    } else {
+      result = { message: 'User not found' };
     }
-  });
+    return result;
+  },
 };
 
-module.exports = loginController;
+export default loginController;

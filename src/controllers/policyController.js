@@ -1,18 +1,13 @@
-var database = require("../database.js");
+/* eslint-disable no-console */
+import database from '../database';
 
-var policyController = () => {};
+const policyController = {
 
-policyController.getPoliciesByUserName = (name) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let client = await database.Client.findOne({ name: name });
-      let policies = await database.Policy.find({ clientId: client.id });
-      resolve(policies);
-    } catch (e) {
-      console.log(e.message);
-      reject(e);
-    }
-  });
+  getPoliciesByUserName: async (name) => {
+    const client = await database.Client.findOne({ name });
+    const policies = await database.Policy.find({ clientId: client.id });
+    return policies;
+  },
 };
 
-module.exports = policyController;
+export default policyController;

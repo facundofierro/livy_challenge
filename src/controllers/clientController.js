@@ -1,42 +1,22 @@
-var database = require("../database.js");
+import database from '../database';
 
-var clientController = () => {};
+const clientController = {
+  getById: async (id) => {
+    const client = await database.Client.findOne({ id });
+    return client;
+  },
 
-clientController.getById = (id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let client = await database.Client.findOne({ id: id });
-      resolve(client);
-    } catch (e) {
-      console.log(e.message);
-      reject(e);
-    }
-  });
+  getByName: async (name) => {
+    const client = await database.Client.findOne({ name });
+    return client;
+  },
+
+  getByPolicyId: async (id) => {
+    const policy = await database.Policy.findOne({ id });
+    const client = await database.Client.findOne({ id: policy.client_id });
+    return client;
+  },
+
 };
 
-clientController.getByName = (name) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let client = await database.Client.findOne({ name: name });
-      resolve(client);
-    } catch (e) {
-      console.log(e.message);
-      reject(e);
-    }
-  });
-};
-
-clientController.getByPolicyId = (id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let policy = await database.Policy.findOne({ id: id });
-      let client = await database.Client.findOne({ id: policy.client_id });
-      resolve(client);
-    } catch (e) {
-      console.log(e.message);
-      reject(e);
-    }
-  });
-};
-
-module.exports = clientController;
+export default clientController;
