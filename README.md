@@ -1,5 +1,12 @@
 # Livy Challenge
 
+## Description:
+This challenge was made only for evaluating development skill for applying for a job position.
+It contains a simple restfull api service with authentication and some basic operations.
+For simplify ussage this sample application loads data on an in memory mongo db database.
+There are security aspects that are pending like removing .env file secret and encrypting user passwords.
+In case of continuing with this demo project it is desirable to add more source code commets, to expand documentation, to add more controls in tests and to enter a test phase to improve error management. 
+
 ## Usage:
 
 ### 1) Start api application
