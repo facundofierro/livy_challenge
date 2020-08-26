@@ -13,10 +13,10 @@ const expect = require('chai').expect;
 chai.use(chaiHttp);
 const url= 'http://localhost:4000';
 
-var token;
+var token; 
 
 
-describe('Login: ', () => {
+describe('Access control - Login: ', () => {
     it('should fail', (done) => {
         chai.request(url)
         .post('/login')
@@ -30,7 +30,7 @@ describe('Login: ', () => {
 });
 
 
-describe('Login: ', () => {
+describe('Access control - Login: ', () => {
     it('should retrieve token', (done) => {
         chai.request(url)
         .post('/login')
@@ -47,11 +47,11 @@ describe('Login: ', () => {
 });   
    
 
-describe('Get sample clients by id: ', ()=>{
+describe('Access control - Get sample clients by id: ', ()=>{
     it('should get client by id', (done) => {
         chai.request(url)
-        .get('/ClientsById/e8fd159b-57c4-4d36-9bd7-a59ca13057bb')
-        .set('access-token', token)
+        .get('/client/id/e8fd159b-57c4-4d36-9bd7-a59ca13057bb')
+        .set('access-token', token) //token with role 'users'
         .end( function(err,res) {
             console.log(res.body)
             expect(res).to.have.status(200); //expects to have access
@@ -62,11 +62,11 @@ describe('Get sample clients by id: ', ()=>{
    
    
 
-describe('Get sample clients by name: ', ()=>{
+describe('Access control - Get sample clients by name: ', ()=>{
     it('should get client by name', (done) => {
         chai.request(url)
-        .get('/ClientsByName/Lessie')
-        .set('access-token', token)
+        .get('/client/name/Lessie')
+        .set('access-token', token) //token with role 'users'
         .end( function(err,res) {
             console.log(res.body)
             expect(res).to.have.status(200);  //expects to have access
@@ -75,11 +75,11 @@ describe('Get sample clients by name: ', ()=>{
     });
 });
 
-describe('Get policies by user name: ', ()=>{
-    it('should get policies by user name', (done) => {
+describe('Access control - Get policies by user name: ', ()=>{
+    it('should deny access', (done) => {
         chai.request(url)
-        .get('/PoliciesByUserName/Manning')
-        .set('access-token', token)
+        .get('/policy/client_name/Manning')
+        .set('access-token', token) //token with role 'users'
         .end( function(err,res) {
             console.log(res.body)
             expect(res).to.have.status(400); //no access expected
@@ -88,11 +88,11 @@ describe('Get policies by user name: ', ()=>{
     });
 });
 
-describe('Get clients by policy id: ', ()=>{
-    it('should get policies by id', (done) => {
+describe('Access control - Get clients by policy id: ', ()=>{
+    it('should deny access', (done) => {
         chai.request(url)
-        .get('/ClientByPolicyId/56b415d6-53ee-4481-994f-4bffa47b5239')
-        .set('access-token', token)
+        .get('/client/policy_id/56b415d6-53ee-4481-994f-4bffa47b5239')
+        .set('access-token', token) //token with role 'users'
         .end( function(err,res) {
             console.log(res.body)
             expect(res).to.have.status(400); //no access expected

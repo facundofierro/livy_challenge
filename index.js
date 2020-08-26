@@ -13,13 +13,15 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const fs = require('fs');
-const routes = require('./src/routes');
 
-//sample data
-global.clients = JSON.parse(fs.readFileSync('./data/clients.json', 'utf8')).clients;
-global.policies = JSON.parse(fs.readFileSync('./data/policies.json', 'utf8')).policies;
-global.users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8')).users;
+const clientRoute = require('./src/routes/clientRoute');
+const policyRoute = require('./src/routes/policyRoute');
+const loginRoute = require('./src/routes/loginRoute');
+
+const database = require('./src/database');
+
+//start mongo in memory service
+database.start();
 
 //express app
 const app = express();
@@ -38,8 +40,10 @@ app.use(cors());
 app.use(morgan('combined'));
 
 
-//process all routes
-app.use('/', routes);
+//process routes
+app.use('/login', loginRoute);
+app.use('/client', clientRoute);
+app.use('/policy', policyRoute);
 
 // starting the server
 app.listen(4000, () => {
