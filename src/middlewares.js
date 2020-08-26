@@ -3,14 +3,16 @@ import conf from '../conf.js';
 
 const middlewares = {
   tokenVerify: (req, res, next) => {
-    const token = req.headers['access-token'];
-    if (token) {
+    const authorization = req.headers.authorization.split(' ');
+    const authorizationMethod = authorization[0];
+    const token = authorization[1];
+    if (token && authorizationMethod === 'Bearer') {
       jwt.verify(token, conf.masterkey, (err, decoded) => {
         if (err) {
           return res.json({ mensaje: 'Invalid token' });
         }
         req.decoded = decoded;
-        next();
+        return next();
       });
     } else {
       res.status(400).json({ mensaje: 'Token required' });
