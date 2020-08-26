@@ -13,12 +13,16 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import dotenv from 'dotenv';
 
 import clientRoute from './src/routes/clientRoute.js';
 import policyRoute from './src/routes/policyRoute.js';
 import loginRoute from './src/routes/loginRoute.js';
 
 import database from './src/database.js';
+
+// load dotenv variables
+dotenv.config();
 
 // start mongo in memory service
 database.start();

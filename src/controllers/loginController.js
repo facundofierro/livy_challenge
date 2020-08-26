@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import jwt from 'jsonwebtoken';
 import database from '../database.js';
-import conf from '../../conf.js';
 
 const loginController = {
   /**
@@ -9,6 +8,7 @@ const loginController = {
    */
   authenticate: async (user, password_) => {
     let result;
+    const masterkey = process.env.TOKEN_GENERATION_MASTER_KEY;
     const currentUser = await database.User.find({
       name: user,
       password: password_,
@@ -18,7 +18,7 @@ const loginController = {
         check: true,
         user: currentUser,
       };
-      const token = jwt.sign(payload, conf.masterkey, {
+      const token = jwt.sign(payload, masterkey, {
         expiresIn: 1440,
       });
       result = {

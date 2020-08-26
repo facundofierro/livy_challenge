@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken';
-import conf from '../conf.js';
 
 const middlewares = {
   tokenVerify: (req, res, next) => {
+    const masterkey = process.env.TOKEN_GENERATION_MASTER_KEY;
     const authorization = req.headers.authorization.split(' ');
     const authorizationMethod = authorization[0];
     const token = authorization[1];
     if (token && authorizationMethod === 'Bearer') {
-      jwt.verify(token, conf.masterkey, (err, decoded) => {
+      jwt.verify(token, masterkey, (err, decoded) => {
         if (err) {
           return res.json({ mensaje: 'Invalid token' });
         }
