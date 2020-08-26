@@ -1,9 +1,9 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
 /**
  * Policy model schema.
  */
-const policySchema = new Schema({
+const policySchema = new mongoose.Schema({
   id: { type: String, required: true },
   amountInsured: { type: Number, required: true },
   email: { type: String },
@@ -11,9 +11,9 @@ const policySchema = new Schema({
   installmentPayment: { type: Boolean },
   clientId: { type: String },
   client: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'client',
   },
 });
 
-export default model('policy', policySchema);
+export default mongoose.model('policy', policySchema);

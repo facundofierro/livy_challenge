@@ -1,11 +1,11 @@
-import { verify } from 'jsonwebtoken';
-import { masterkey } from '../conf';
+import jwt from 'jsonwebtoken';
+import conf from '../conf.js';
 
 const middlewares = {
   tokenVerify: (req, res, next) => {
     const token = req.headers['access-token'];
     if (token) {
-      verify(token, masterkey, (err, decoded) => {
+      jwt.verify(token, conf.masterkey, (err, decoded) => {
         if (err) {
           return res.json({ mensaje: 'Invalid token' });
         }

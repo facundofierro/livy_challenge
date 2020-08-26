@@ -1,20 +1,24 @@
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { connect } from 'mongoose';
+import mongoMemoryServer from 'mongodb-memory-server';
+import mongoose from 'mongoose';
+
+import Client from './models/clientModel.js';
+import Policy from './models/policyModel.js';
+import User from './models/userModel.js';
 
 // sample data
-import { clients as sampleClients } from '../data/clients.json';
-import { policies as samplePolicies } from '../data/policies.json';
-import { users as sampleUsers } from '../data/users.json';
+import sampleClients from '../data/clients.js';
+import samplePolicies from '../data/policies.js';
+import sampleUsers from '../data/users.js';
 
-const mongod = new MongoMemoryServer();
+const mongod = new mongoMemoryServer.MongoMemoryServer();
 
 // database utils
 const database = () => {};
 
 // mongoose models
-database.Client = require('./models/clientModel.js');
-database.Policy = require('./models/policyModel.js').default;
-database.User = require('./models/userModel.js');
+database.Client = Client;
+database.Policy = Policy;
+database.User = User;
 
 /**
  * Connect to the in-memory database.
@@ -29,7 +33,7 @@ database.start = async () => {
     reconnectInterval: 1000,
   };
 
-  await connect(uri, mongooseOpts);
+  await mongoose.connect(uri, mongooseOpts);
 
   database.insertSampleData();
 };
@@ -37,13 +41,13 @@ database.start = async () => {
 database.insertSampleData = async () => {
   try {
     // insert sample clients
-    await database.Client.insertMany(sampleClients);
+    await database.Client.insertMany(sampleClients.clients);
 
     // insert sample policies
-    await database.Policy.insertMany(samplePolicies);
+    await database.Policy.insertMany(samplePolicies.policies);
 
     // insert sample users
-    await database.User.insertMany(sampleUsers);
+    await database.User.insertMany(sampleUsers.users);
   } catch (e) {
     console.log(e.message);
   }

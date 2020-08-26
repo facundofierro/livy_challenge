@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /**
  *
  * Sample application for livy challege 2020
@@ -10,19 +9,19 @@
  */
 
 import express from 'express';
-import { json, urlencoded } from 'body-parser';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import clientRoute from './src/routes/clientRoute';
-import policyRoute from './src/routes/policyRoute';
-import loginRoute from './src/routes/loginRoute';
+import clientRoute from './src/routes/clientRoute.js';
+import policyRoute from './src/routes/policyRoute.js';
+import loginRoute from './src/routes/loginRoute.js';
 
-import { start } from './src/database';
+import database from './src/database.js';
 
 // start mongo in memory service
-start();
+database.start();
 
 // express app
 const app = express();
@@ -31,8 +30,8 @@ const app = express();
 app.use(helmet());
 
 // using bodyParser to parse JSON bodies into JS objects
-app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // enabling CORS
 app.use(cors());

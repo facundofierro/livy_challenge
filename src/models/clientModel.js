@@ -1,13 +1,13 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
 /**
  * Client model schema.
  */
-const clientSchema = new Schema({
+const clientSchema = new mongoose.Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
   email: { type: String },
   role: { type: String },
 });
 
-module.exports = model('client', clientSchema);
+export default mongoose.model('client', clientSchema);

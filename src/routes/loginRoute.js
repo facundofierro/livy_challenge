@@ -1,14 +1,14 @@
-/* eslint-disable no-console */
-import { Router } from 'express';
-import { authenticate } from '../controllers/loginController';
+import express from 'express';
+import loginController from '../controllers/loginController.js';
 
-const router = Router();
+const router = express.Router();
 
 // login
 router.post('/', async (req, res) => {
   try {
-    const result = await authenticate(req.body.user, req.body.password);
-    res.send(result);
+    const result = await loginController.authenticate(req.body.user, req.body.password);
+    if (result.success) res.send(result);
+    else res.status(400).json(result);
   } catch (e) {
     console.log(e.message);
     res.status(400).json(e);

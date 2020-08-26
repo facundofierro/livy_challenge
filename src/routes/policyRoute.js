@@ -4,16 +4,16 @@
  *
  */
 
-import { Router } from 'express';
-import { getPoliciesByUserName } from '../controllers/policyController';
-import { tokenVerify, isAdmin } from '../middlewares';
+import express from 'express';
+import policyController from '../controllers/policyController.js';
+import middlewares from '../middlewares.js';
 
-const router = Router();
+const router = express.Router();
 
 // get policies by user name
-router.get('/client_name/:name', tokenVerify, isAdmin, async (req, res) => {
+router.get('/client_name/:name', middlewares.tokenVerify, middlewares.isAdmin, async (req, res) => {
   try {
-    const result = getPoliciesByUserName(req.params.name);
+    const result = policyController.getPoliciesByUserName(req.params.name);
     res.send(result);
   } catch (e) {
     console.log(e.message);

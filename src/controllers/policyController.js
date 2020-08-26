@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import database from '../database';
+import database from '../database.js';
 
 const policyController = {
 

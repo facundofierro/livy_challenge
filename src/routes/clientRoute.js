@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
-import { Router } from 'express';
-import { getById, getByName, getByPolicyId } from '../controllers/clientController';
+import express from 'express';
+import clientController from '../controllers/clientController.js';
 
 // middlewares
-import { tokenVerify, isAdmin } from '../middlewares';
+import middlewares from '../middlewares.js';
 
-const router = Router();
+const router = express.Router();
 
 // get clients by id
-router.get('/id/:id', tokenVerify, async (req, res) => {
+router.get('/id/:id', middlewares.tokenVerify, async (req, res) => {
   try {
-    const result = await getById(req.params.id);
+    const result = await clientController.getById(req.params.id);
     console.log(result);
     res.send(result);
   } catch (e) {
@@ -20,9 +20,9 @@ router.get('/id/:id', tokenVerify, async (req, res) => {
 });
 
 // get clients by name
-router.get('/name/:name', tokenVerify, async (req, res) => {
+router.get('/name/:name', middlewares.tokenVerify, async (req, res) => {
   try {
-    const result = await getByName(req.params.name);
+    const result = await clientController.getByName(req.params.name);
     res.send(result);
   } catch (e) {
     console.log(e.message);
@@ -31,9 +31,9 @@ router.get('/name/:name', tokenVerify, async (req, res) => {
 });
 
 // get client by policy id
-router.get('/policy_id/:id', tokenVerify, isAdmin, async (req, res) => {
+router.get('/policy_id/:id', middlewares.tokenVerify, middlewares.isAdmin, async (req, res) => {
   try {
-    const result = await getByPolicyId(req.params.id);
+    const result = await clientController.getByPolicyId(req.params.id);
     res.json(result);
   } catch (e) {
     console.log(e.message);
